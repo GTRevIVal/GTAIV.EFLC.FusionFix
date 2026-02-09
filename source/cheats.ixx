@@ -8,58 +8,9 @@ import common;
 import comvars;
 import natives;
 import settings;
-import seasonal;
 
 constexpr size_t MAX_CHEAT_LENGTH = 32;
 char CheatString[MAX_CHEAT_LENGTH] = { 0 };
-
-auto SnowCheat(bool bPrintHelp = true) -> void
-{
-    if (!SeasonalManager::IsTimedEventsDisabled())
-        SeasonalManager::DisableTimedEvents();
-
-    if (SeasonalManager::GetCurrent() == SeasonalType::Snow)
-    {
-        SeasonalManager::Set(SeasonalType::None);
-
-        if (bPrintHelp)
-            Natives::PrintHelp((char*)"WinterEvent0");
-    }
-    else
-    {
-        SeasonalManager::Set(SeasonalType::Snow);
-
-        if (bPrintHelp)
-            Natives::PrintHelp((char*)"WinterEvent1");
-    }
-}
-
-auto HallCheat(bool bPrintHelp = true) -> void
-{
-    if (!SeasonalManager::IsTimedEventsDisabled())
-        SeasonalManager::DisableTimedEvents();
-
-    if (SeasonalManager::GetCurrent() == SeasonalType::Halloween)
-    {
-        SeasonalManager::Set(SeasonalType::None);
-
-        if (bPrintHelp)
-            Natives::PrintHelp((char*)"HalloweenEvent0");
-    }
-    else
-    {
-        SeasonalManager::Set(SeasonalType::Halloween);
-
-        if (bPrintHelp)
-            Natives::PrintHelp((char*)"HalloweenEvent1");
-    }
-}
-
-std::vector<std::pair<const char*, std::function<void()>>> ReversedCheats =
-{
-    { "wonstitel", []() { SnowCheat(); }}, // letitsnow
-    { "ecafyracs", []() { HallCheat(); }}, // scaryface
-};
 
 char VirtualKeyToChar(int vkCode)
 {
@@ -170,45 +121,12 @@ public:
 
                     if (CheatString[0] == '\0')
                         return;
-
-                    for (const auto& it : ReversedCheats)
-                    {
-                        const char* revCheat = it.first;
-                        size_t len = strlen(revCheat);
-                        if (len > MAX_CHEAT_LENGTH)
-                            continue;
-                        if (strncmp(CheatString, revCheat, len) == 0)
-                        {
-                            it.second();
-                            CheatString[0] = '\0';
-                            break;
-                        }
-                    }
                 };
             }
         };
 
         FusionFix::onInitEventAsync() += []()
         {
-            CIniReader iniReader("");
-            bool bSnowCheat = iniReader.ReadInteger("CHEATS", "SnowCheat", 0) != 0;
-            bool bHalloweenCheat = iniReader.ReadInteger("CHEATS", "HalloweenCheat", 0) != 0;
-
-            if (bSnowCheat)
-                FusionFix::onGameInitEvent() += []() { SnowCheat(); };
-
-            if (bHalloweenCheat)
-                FusionFix::onGameInitEvent() += []() { HallCheat(); };
-
-            NativeOverride::RegisterPhoneCheat("7665550100", []
-            {
-                SnowCheat();
-            });
-
-            NativeOverride::RegisterPhoneCheat("2665550100", []
-            {
-                HallCheat();
-            });
 
             enum ePedComponent
             {

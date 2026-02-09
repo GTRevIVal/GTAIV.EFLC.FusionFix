@@ -9,7 +9,6 @@ import settings;
 import comvars;
 import natives;
 import timecycext;
-import seasonal;
 
 float fVolFogFarClip = 4500.0f;
 
@@ -38,40 +37,6 @@ int timecyc_scanf(const char* i, const char* fmt, int* mAmbient0ColorR, int* mAm
 {
     if (!i)
         return 0;
-
-    // TODO: Maybe to seasonal at some point?
-    {
-        static auto getDatFile = [](const std::string& fileName) {
-            std::vector<std::string> dat;
-            static const auto filePath = GetModulePath(GetModuleHandleW(NULL)).parent_path() / "pc" / "data";
-            std::ifstream ifstr(filePath / fileName);
-            std::string line;
-            while (std::getline(ifstr, line))
-            {
-                if (line.find_first_not_of(" \t\r\n") != std::string::npos && !line.contains('/'))
-                    dat.emplace_back(line);
-            }
-            return dat;
-        };
-
-        static const auto snowTC = getDatFile("snow.dat");
-        static const auto hallTC = getDatFile("halloween.dat");
-
-        switch (SeasonalManager::GetCurrent()) {
-            case SeasonalType::Snow:
-            {
-                if (snowTC.size() == 99)
-                    i = snowTC[scanfCount].c_str();
-                break;
-            }
-            case SeasonalType::Halloween:
-            {
-                if (hallTC.size() == 99)
-                    i = hallTC[scanfCount].c_str();
-                break;
-            }
-        }
-    }
 
     auto res = sscanf(i, fmt, mAmbient0ColorR, mAmbient0ColorG, mAmbient0ColorB, mAmbient1ColorR, mAmbient1ColorG, mAmbient1ColorB, mDirLightColorR,
         mDirLightColorG, mDirLightColorB, unusedParam, mFilmGrain, mSkyBottomColorFogDensityA, mSkyBottomColorFogDensityR, mSkyBottomColorFogDensityG,
