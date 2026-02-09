@@ -67,12 +67,7 @@ export void CompatibilityWarnings()
     }
     else if (GetModuleHandleW(L"xlive"))
     {
-        if (IsModuleUAL(GetModuleHandleW(L"xlive")))
-            return;
-
-        szHeader = L"You are running GTA IV The Complete Edition Fusion Fix in backwards compatibility mode.";
-        szContent = L"It requires the latest version of " \
-            L"<a href=\"https://github.com/ThirteenAG/GTAIV.EFLC.FusionFix/releases/latest/download/GTAIV.EFLC.FusionFixLegacyAddon.zip\">Fusion Fix Legacy Addon</a>.";
+        return;
     }
     else
         return;
