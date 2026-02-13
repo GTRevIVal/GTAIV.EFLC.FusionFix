@@ -7,26 +7,6 @@ export module skipintro;
 import common;
 import settings;
 
-bool bSkipIntroNotNeeded = false;
-injector::hook_back<void(__cdecl*)(int)> hbsub_7870A0;
-void __cdecl sub_7870A0(int a1)
-{
-    static bool bOnce = false;
-    if (!bOnce)
-    {
-        bSkipIntroNotNeeded = true;
-        if (a1 == 0)
-        {
-            bool bNoLoad = (GetAsyncKeyState(VK_SHIFT) & 0xF000) != 0;
-            if (!bNoLoad && FusionFixSettings("PREF_SKIP_MENU"))
-                a1 = 6;
-
-            bOnce = true;
-        }
-    }
-    return hbsub_7870A0.fun(a1);
-}
-
 namespace CGame
 {
     bool bAfterFirstRun = false;
@@ -48,7 +28,6 @@ public:
         FusionFix::onInitEvent() += []()
         {
             bool bSkipIntro = FusionFixSettings("PREF_SKIP_INTRO") != 0;
-            bool bSkipMenu = FusionFixSettings("PREF_SKIP_MENU") != 0;
 
             if (bSkipIntro)
             {
@@ -69,13 +48,6 @@ public:
                             *(int32_t*)&regs.eax = *(int32_t*)(regs.esp + 0x18);
                             less = *(int32_t*)&regs.eax < 8000;
                         }
-                        if (!bSkipIntroNotNeeded && FusionFixSettings("PREF_SKIP_INTRO") && less)
-                        {
-                            if (reg == 0x54)
-                                regs.edx = 0;
-                            else
-                                regs.eax = 0;
-                        }
                     }
                 }; injector::MakeInline<Loadsc>(pattern.get_first(0), pattern.get_first(10));
 
@@ -92,17 +64,6 @@ public:
                 if (!pattern.count_hint(1).empty())
                     injector::WriteMemory<uint8_t>(pattern.get_first(-23), 0xEB, true);
                 #endif
-            }
-
-            //if (bSkipMenu)
-            {
-                auto pattern = hook::pattern("E8 ? ? ? ? 83 C4 04 8B 8C 24 ? ? ? ? 5F 5E 5D 5B 33 CC E8 ? ? ? ? 81 C4 ? ? ? ? C3");
-                if (pattern.size() == 5)
-                    hbsub_7870A0.fun = injector::MakeCALL(pattern.count(5).get(1).get<void*>(0), sub_7870A0).get();
-                else
-                {
-                    hbsub_7870A0.fun = injector::MakeCALL(hook::get_pattern("E8 ? ? ? ? 83 C4 04 5F 5E 5B 8B 8C 24 ? ? ? ? 33 CC E8 ? ? ? ? 8B E5 5D C3 83 F8 30", 0), sub_7870A0).get();
-                }
             }
         };
     }
