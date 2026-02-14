@@ -721,18 +721,6 @@ public:
                 }
             }
 
-            // Bike standing still feet fix
-            {
-                auto pattern = hook::pattern("83 3D ? ? ? ? ? 0F 85 ? ? ? ? 68 ? ? ? ? 68");
-                if (!pattern.empty())
-                    injector::MakeNOP(pattern.get_first(7), 6, true);
-                else
-                {
-                    pattern = hook::pattern("39 05 ? ? ? ? 0F 85 ? ? ? ? 68");
-                    injector::MakeNOP(pattern.get_first(6), 6, true);
-                }
-            }
-
             // Skybox Black Bottom Fix -- causes holes in the map to be more visible.
             // {
             //     auto PatchVertices = [](float* ptr)
