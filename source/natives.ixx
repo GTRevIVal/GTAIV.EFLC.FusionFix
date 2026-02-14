@@ -218,7 +218,12 @@ public:
             }
             else
             {
-                m_IndexTable[Index](&cxt);
+                __try
+                {
+                    m_IndexTable[Index](&cxt);
+                }
+                __except (EXCEPTION_EXECUTE_HANDLER) {}
+                
             }
         }
 
