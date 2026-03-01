@@ -213,7 +213,11 @@ public:
                 if (fn)
                 {
                     m_IndexTable[Index] = fn;
-                    fn(&cxt);
+                    __try
+                    {
+                        fn(&cxt);
+                    }
+                    __except (EXCEPTION_EXECUTE_HANDLER) {}
                 }
             }
             else
