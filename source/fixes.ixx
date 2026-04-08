@@ -672,7 +672,7 @@ public:
                     hbsub_B64D60.fun = injector::MakeCALL(pattern.get_first(0), sub_B64D60).get();
             }
 
-            // Disable Z-write for emmissive shaders. Fixes visual bugs e.g. strobe lights in Bahama Mamas (TBoGT) and more.
+            // Disable Z-write for emissive shaders. Fixes visual bugs e.g. strobe lights in Bahama Mamas (TBoGT) and more.
             {
                 static uint32_t* dwEFB1B8 = *hook::pattern("6A 01 6A 10 89 3D").get_first<uint32_t*>(6);
                 auto pattern = find_pattern("83 FF 05 74 05 83 FF 04 75 26 6A 00 6A 0C E8 ? ? ? ? 83 C4 08 85 C0 74 0B 6A 01 8B C8 E8", "83 FF 05 74 05");
@@ -1004,6 +1004,18 @@ public:
 
                     return_to(loc_927DE0);
                 });
+            }
+
+            {
+                auto pattern = hook::pattern("F3 0F 10 15 ? ? ? ? F3 0F 10 5C 24 ? 0F B6 C0");
+                if (!pattern.empty())
+                {
+                    static auto RenderMapCrosshairHook = safetyhook::create_mid(pattern.get_first(0), [](SafetyHookContext& regs)
+                    {
+                        float aspectratio = ((float)*rage::grcDevice::ms_nActiveWidth / (float)*rage::grcDevice::ms_nActiveHeight);
+                        *(float*)(regs.esp + 0x64 - 0x30) /= (aspectratio * 0.75f);
+                    });
+                }
             }
         };
     }
