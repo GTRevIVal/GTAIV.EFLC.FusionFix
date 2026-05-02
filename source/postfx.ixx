@@ -1617,7 +1617,10 @@ private:
         {
             bInsteadDrawPrimitivePostFX = false;
             Init();
-            NewPostFX();
+            __try {
+                NewPostFX();
+            }
+            __except (EXCEPTION_EXECUTE_HANDLER) {}
         }
         else
         {
