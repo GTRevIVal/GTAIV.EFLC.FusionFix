@@ -227,7 +227,6 @@ public:
                     m_IndexTable[Index](&cxt);
                 }
                 __except (EXCEPTION_EXECUTE_HANDLER) {}
-                
             }
         }
 

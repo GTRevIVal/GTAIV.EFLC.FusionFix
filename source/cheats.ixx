@@ -127,7 +127,6 @@ public:
 
         FusionFix::onInitEventAsync() += []()
         {
-
             enum ePedComponent
             {
                 PED_COMPONENT_HEAD,

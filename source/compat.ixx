@@ -69,10 +69,6 @@ export void CompatibilityWarnings()
             L"<a href=\"https://github.com/ThirteenAG/Ultimate-ASI-Loader/releases/latest\">Ultimate ASI Loader</a>\n\n" \
             L"<a href=\"https://github.com/ThirteenAG/Ultimate-ASI-Loader/releases/latest\">https://github.com/ThirteenAG/Ultimate-ASI-Loader/releases/latest</a>";
     }
-    else if (GetModuleHandleW(L"xlive"))
-    {
-        return;
-    }
     else
         return;
 
