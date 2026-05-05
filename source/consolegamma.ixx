@@ -30,7 +30,7 @@ private:
     static inline IDirect3DVertexDeclaration9* mQuadVertexDecl;
 
     // DX9 textures/surfaces
-    static inline IDirect3DTexture9* pSceneTex = nullptr;
+    static inline rage::grcRenderTargetPC* pSceneRT = nullptr;
     static inline IDirect3DSurface9* pSceneSurf = nullptr;
 
     // Shaders
@@ -39,8 +39,13 @@ private:
 
     static void __fastcall OnDeviceLost()
     {
-        SAFE_RELEASE(pSceneTex);
         SAFE_RELEASE(pSceneSurf);
+
+        if (pSceneRT)
+        {
+            pSceneRT->Destroy();
+            pSceneRT = nullptr;
+        }
 
         SAFE_RELEASE(mQuadVertexBuffer);
         SAFE_RELEASE(mQuadVertexDecl);
@@ -62,10 +67,34 @@ private:
         auto nScreenHeight = desc.Height;
         SAFE_RELEASE(pBackBuffer);
 
-        if (FAILED(pDevice->CreateTexture(nScreenWidth, nScreenHeight, 1, D3DUSAGE_RENDERTARGET, desc.Format, D3DPOOL_DEFAULT, &pSceneTex, nullptr)))
+        SAFE_RELEASE(pSceneSurf);
+        if (pSceneRT)
+        {
+            pSceneRT->Destroy();
+            pSceneRT = nullptr;
+        }
+
+        rage::grcRenderTargetDesc rtDesc{};
+        rtDesc.mMultisampleCount = 0;
+        rtDesc.field_0 = 1;
+        rtDesc.field_12 = 1;
+        rtDesc.mDepthRT = nullptr;
+        rtDesc.field_8 = 1;
+        rtDesc.field_10 = 1;
+        rtDesc.field_11 = 1;
+        rtDesc.field_24 = false;
+        rtDesc.mFormat = rage::getEngineTextureFormat(desc.Format);
+
+        auto rt = rage::grcTextureFactory::GetInstance()->CreateRenderTarget("ConsoleGammaScene", 3, nScreenWidth, nScreenHeight, desc.Width == nScreenWidth ? 32 : 32, &rtDesc);
+        rage::grcDevice::grcResolveFlags resolveFlags{};
+        rage::grcTextureFactoryPC::GetInstance()->LockRenderTarget(0, rt, nullptr);
+        rage::grcTextureFactoryPC::GetInstance()->UnlockRenderTarget(0, &resolveFlags);
+        pSceneRT = rt;
+
+        if (!pSceneRT || !pSceneRT->mD3DTexture)
             return;
 
-        pSceneTex->GetSurfaceLevel(0, &pSceneSurf);
+        pSceneRT->mD3DTexture->GetSurfaceLevel(0, &pSceneSurf);
 
         // Create vertex declaration
         if (!mQuadVertexDecl)
@@ -131,7 +160,7 @@ private:
             return;
 
         auto pDevice = rage::grcDevice::GetD3DDevice();
-        if (!pDevice || !pSceneTex || !pSceneSurf || !VS_BlitGamma || !PS_BlitGamma || !mQuadVertexDecl || !mQuadVertexBuffer)
+        if (!pDevice || !pSceneRT || !pSceneRT->mD3DTexture || !pSceneSurf || !VS_BlitGamma || !PS_BlitGamma || !mQuadVertexDecl || !mQuadVertexBuffer)
             return;
 
         IDirect3DSurface9* pRealBB = GetRealBackBuffer(pDevice);
@@ -237,7 +266,7 @@ private:
 
             pDevice->SetTexture(0, nullptr);
 
-            pDevice->SetTexture(0, pSceneTex);
+            pDevice->SetTexture(0, pSceneRT->mD3DTexture);
 
             pDevice->SetVertexShader(VS_BlitGamma);
             pDevice->SetPixelShader(PS_BlitGamma);
