@@ -1751,7 +1751,9 @@ private:
     {
         DWORD result = RenderPedAndVehicleFakeShadowsInlineHook.unsafe_ccall<DWORD>(a1);
 
-        RenderAmbientOcclusion();
+        __try {
+            RenderAmbientOcclusion();
+        } __except (EXCEPTION_EXECUTE_HANDLER) {}
 
         return result;
     }
