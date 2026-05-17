@@ -230,6 +230,7 @@ Also available for [Max Payne 3](https://github.com/ThirteenAG/MaxPayne3.FusionF
 - Restored console player transparency on air hockey minigame
 - Restored traffic cops in toll booths
 - Restored non-cop pedestrians in helicopters flying around city
+- Restored missing book from one kind of preacher's hands in IV
 - Restored own unique soda can model for eCola vending machines instead of reusing Sprunk ones
 - Restored TLAD combat shotgun own unique prop model (prop_e1_pumpshot) instead of reusing IV model (cj_prop_pumpshot)
 - Restored the gun shop owner own unique model (M_M_GunNut_01) instead of using the strip club bouncer model (M_Y_bouncer_01)
@@ -259,6 +260,7 @@ Also available for [Max Payne 3](https://github.com/ThirteenAG/MaxPayne3.FusionF
 - Fixed vehicles being removed too early after parking it in garage in Brucie's web email vehicles theft
 - Fixed Ilyena call and Brycebug content not triggering after loading save (From Ilyena's random encounter and Stubbs' job)
 - Fixed scripted depth of field not being removed properly in several missions (e.g. "Catch the Wave")
+- Fixed several scripted cutscene camera zoom speeding up on high framerates in mission "It's Your Call"
 - Fixed Faustin execution animation sync issue in mission "The Master and the Molotov"
 - Fixed Playboy/Dwayne execution animations sync issues on high framerates in mission "...The Holland Play"
 - Fixed one dialogue couldn't be restored and continue if Niko is too far away from Packie in mission "Diamonds are a Girl's Best Friend"
@@ -337,8 +339,10 @@ Also available for [Max Payne 3](https://github.com/ThirteenAG/MaxPayne3.FusionF
 - Pressed radar zoom out button now will make it stay zoomed out for a few seconds
 - Fixed helicopter searchlights flickering violently when more than one helicopter is present
 - Fixed radio reset after cutscene
+- Fixed NPC lanes swerving suddenly on the Algonquin Bridge when there is a running train under it
 - Workaround for lights & motion blur flickering intermittently when player is drunk
 - Made stunt jump camera be controlled by mouse wheel when using keyboard and mouse
+- Added an option to restore unused death music in IV
 - Fixed not being able to give money to beggars normally on PC
 - Fixed TLAD phone keypad rendering on top of the plastic cover
 - Fixed TLAD incorrect traffic cops head texture

@@ -232,7 +232,7 @@ public:
                 CutsceneFpsLimiter.Init(mode, fCutsceneFpsLimit);
                 ScriptCutsceneFpsLimiter.Init(mode, fScriptCutsceneFpsLimit);
                 LoadingFpsLimiter.Init(mode, std::clamp(fLoadingFpsLimit, 30.0f, FLT_MAX));
-                LoadingFpsLimiter2.Init(mode, 240.0f);
+                LoadingFpsLimiter2.Init(mode, 60.0f);
                 MinigamesFpsLimiter.Init(mode, fMinigamesFpsLimit);
 
                 auto pattern = find_pattern("A3 ? ? ? ? E8 ? ? ? ? A1 ? ? ? ? 50 8B 08");
